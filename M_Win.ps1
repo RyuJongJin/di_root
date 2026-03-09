@@ -78,12 +78,9 @@ function Get-StatColor([float]$value) {
 
 # 3. 실시간 대시보드
 $main_mode ="cmd"
-function Show-Dashboard-Live {
-    [System.Console]::CursorVisible = $false
-   
 
-    while ($true) {
-        goto_xy 0 0
+function Show-Dashboard-Live-menu {
+	        goto_xy 0 0
         $stats = Get-SystemStats
         $conn = Get-NetTCPConnection -ErrorAction SilentlyContinue
         $allListen = $conn | Where-Object { $_.State -eq 'Listen' }
@@ -127,6 +124,15 @@ function Show-Dashboard-Live {
             $key = [Console]::ReadKey($true)
             if ($key.Key -eq "Escape") {  [System.Console]::CursorVisible = $true ; Clear-Host; exit } else {  [System.Console]::CursorVisible = $true ;break } 
         }
+
+}
+
+function Show-Dashboard-Live {
+    [System.Console]::CursorVisible = $false
+   
+
+    while ($true) {
+		Show-Dashboard-Live-menu
         Start-Sleep -Seconds 1	
     }
  
@@ -140,8 +146,9 @@ function main_cmd {
     while ($true) {
         # 1. 실시간 대시보드 표시 (여기서 ESC를 누르면 종료, 다른 키를 누르면 break로 빠져나옴)
         
-        Show-Dashboard-Live 
+        Show-Dashboard-Live
         Clear-Host
+		Show-Dashboard-Live-menu
         Write-Host "================================================================" -ForegroundColor Gray
         Write-Host "   LENA MANAGEMENT MENU (ID 입력 후 Enter)                      " -ForegroundColor Cyan
         Write-Host "================================================================"
